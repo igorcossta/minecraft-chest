@@ -1,0 +1,11 @@
+name: Chest
+version: '${project.version}'
+main: io.github.igorcossta.Main
+api-version: 1.19
+authors: [ skillvondragon ]
+description: A private chest plugin
+website: https://github.com/igorcossta
+commands:
+  chest:
+    description: open the chest
+    usage: /<command>
