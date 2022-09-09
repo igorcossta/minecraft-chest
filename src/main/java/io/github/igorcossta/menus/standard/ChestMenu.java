@@ -58,14 +58,23 @@ public class ChestMenu extends Menu {
     private void inventoryClickEvent(InventoryClickEvent e) {
         if (e.getView().getBottomInventory().equals(e.getClickedInventory())) return;
         if (Slot.STANDARD.getSlots().contains(e.getRawSlot())) return;
-
         e.setCancelled(true);
-        if (e.getRawSlot() == 8) {
-            swap(0, e.getView().getTopInventory());
+
+        int clickedSlot = e.getRawSlot();
+        Inventory topInventory = e.getView().getTopInventory();
+
+        switch (clickedSlot) {
+            case 8 -> swap(0, topInventory);
+            case 17 -> swap(1, topInventory);
+            case 48 -> deleteChest(topInventory);
         }
-        if (e.getRawSlot() == 17) {
-            swap(1, e.getView().getTopInventory());
+    }
+
+    private void deleteChest(Inventory currentChest) {
+        for (Integer slot : Slot.STANDARD.getSlots()) {
+            currentChest.setItem(slot, new ItemStack(Material.AIR));
         }
+        menuOwner.getChests().remove(getChestNumber());
     }
 
     private void inventoryOpenEvent(InventoryOpenEvent e) {
