@@ -2,6 +2,7 @@ package io.github.igorcossta.commands;
 
 import io.github.igorcossta.Main;
 import io.github.igorcossta.commands.standard.ChestCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,13 +27,21 @@ public class CommandManager implements CommandExecutor {
             if (args.length > 0) {
                 helpMenu(p);
             } else {
+
                 subCommands.stream()
                         .filter(cmd -> cmd.commandName().equalsIgnoreCase(command.getName()))
                         .findFirst()
-                        .ifPresent(cmd -> cmd.perform(p, args));
+                        .ifPresent(cmd -> {
+                            if (p.hasPermission(cmd.commandPermission())) cmd.perform(p, args);
+                            else p.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfig().getString("config.no_permission.player")));
+                        });
             }
 
-        } else sender.sendMessage("you aren't able to run this command!");
+        } else sender.sendMessage(
+                ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfig().getString("config.no_permission.console"))
+        );
         return true;
     }
 

@@ -21,12 +21,12 @@ public class ChestCommand implements SubCommand {
 
     @Override
     public String commandDescription() {
-        return "command to open the private chest";
+        return plugin.getConfig().getString("config.chest.description");
     }
 
     @Override
     public String commandPermission() {
-        return "chest.standard";
+        return plugin.getConfig().getString("config.chest.permission");
     }
 
     @Override

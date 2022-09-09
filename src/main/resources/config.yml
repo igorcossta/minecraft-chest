@@ -1,0 +1,15 @@
+# the chest title
+chest_title: "Chest"
+
+# the title of action buttons
+move_items_button: "&emove items to inventory"
+clear_items_button: "&eclear current chest"
+
+# command configuration
+config:
+  chest:
+    permission: "chest.standard"
+    description: "command to open the private chest"
+  no_permission:
+    console: "you aren't able to run this command!"
+    player: "you has no permission to run this command!"

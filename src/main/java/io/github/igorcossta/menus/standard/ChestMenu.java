@@ -30,7 +30,7 @@ public class ChestMenu extends Menu {
 
     @Override
     public String menuTitle() {
-        return "Chest";
+        return ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("chest_title"));
     }
 
     @Override
@@ -103,14 +103,16 @@ public class ChestMenu extends Menu {
         // draw the action buttons
         ItemStack hopper = itemBuilder.createItem()
                 .setMaterial(Material.HOPPER)
-                .setDisplayName(ChatColor.YELLOW + "move items to inventory")
+                .setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfig().getString("move_items_button")))
                 .build();
 
         getInventory().setItem(46, hopper);
 
         ItemStack redStone = itemBuilder.createItem()
                 .setMaterial(Material.REDSTONE)
-                .setDisplayName(ChatColor.RED + "clear vault inventory")
+                .setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfig().getString("clear_items_button")))
                 .build();
 
         getInventory().setItem(48, redStone);

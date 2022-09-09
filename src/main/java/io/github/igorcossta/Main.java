@@ -16,6 +16,8 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+
         Objects.requireNonNull(getCommand("chest")).setExecutor(new CommandManager(this));
         getServer().getPluginManager().registerEvents(new ChestListener(), this);
     }
