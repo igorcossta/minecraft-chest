@@ -9,12 +9,17 @@ import io.github.igorcossta.utils.ItemBuilder;
 import io.github.igorcossta.utils.ItemWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 public class ChestMenu extends Menu {
     private int chestNumber;
@@ -67,6 +72,10 @@ public class ChestMenu extends Menu {
             case 8 -> swap(0, topInventory);
             case 17 -> swap(1, topInventory);
             case 48 -> deleteChest(topInventory);
+            case 46 -> {
+                moveItemsToPlayerInventory(topInventory);
+                deleteChest(topInventory);
+            }
         }
     }
 
@@ -74,7 +83,7 @@ public class ChestMenu extends Menu {
         for (Integer slot : Slot.STANDARD.getSlots()) {
             currentChest.setItem(slot, new ItemStack(Material.AIR));
         }
-        menuOwner.getChests().remove(getChestNumber());
+        menuOwner.getChests().put(getChestNumber(), new ItemWrapper());
     }
 
     private void inventoryOpenEvent(InventoryOpenEvent e) {
@@ -162,5 +171,21 @@ public class ChestMenu extends Menu {
 
     private void clear(ItemWrapper currentChest, Inventory viewToClear) {
         currentChest.getItems().forEach((slot, item) -> viewToClear.remove(item));
+    }
+
+    private void moveItemsToPlayerInventory(Inventory currentChest) {
+        ItemWrapper chestItems = getChestItems(currentChest);
+
+        if (chestItems.getItems().isEmpty()) return;
+
+        // remove items from chest and add to player's inventory
+        // https://www.spigotmc.org/threads/how-to-check-if-players-inventory-can-hold-or-not-new-itemstack.340455/
+        ItemStack[] itemsToMove = chestItems.getItems().values().stream().filter(Objects::nonNull).toArray(ItemStack[]::new);
+        Player player = menuOwner.getPlayer();
+        HashMap<Integer, ItemStack> toDrop = player.getInventory().addItem(itemsToMove);
+        if (!toDrop.isEmpty()) {
+            toDrop.values().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
+            player.playSound(player.getLocation(), Sound.ITEM_BUNDLE_DROP_CONTENTS, 1F, 1F);
+        }
     }
 }
