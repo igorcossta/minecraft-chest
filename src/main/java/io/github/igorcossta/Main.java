@@ -1,6 +1,7 @@
 package io.github.igorcossta;
 
 import io.github.igorcossta.commands.CommandManager;
+import io.github.igorcossta.files.DataManager;
 import io.github.igorcossta.listeners.ChestListener;
 import io.github.igorcossta.menus.MenuOwner;
 import org.bukkit.entity.Player;
@@ -13,10 +14,12 @@ import java.util.UUID;
 
 public final class Main extends JavaPlugin {
     private Map<UUID, MenuOwner> playersChest = new HashMap<>();
+    private DataManager dataManager;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        dataManager = new DataManager(this, "inventories");
 
         Objects.requireNonNull(getCommand("chest")).setExecutor(new CommandManager(this));
         getServer().getPluginManager().registerEvents(new ChestListener(), this);
